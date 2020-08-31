@@ -1,0 +1,19 @@
+{
+	"Betatest: Add Field Group": {
+		"scope": "cds",
+		"prefix": "#Betatest: Add Field Group",
+		"body": ["FieldGroup #AdminData : {Data : \n[{\\$Type : 'UI.DataField',\nValue : createdAt}\n,{\\$Type : 'UI.DataField',\nValue : createdBy},\n]},"]
+	},
+	"Betatest: Add Facet": {
+		"scope": "cds",
+		"prefix": "#Betatest: Add Facet",
+		"body": ["\n{\\$Type  : 'UI.ReferenceFacet',\nLabel  : '{i18n>AdminData}',\nID : 'AdminDataFacet',\nTarget : '@UI.FieldGroup#AdminData'\n}"]
+		
+	},
+	"Betatest: Add Column": {
+		"scope": "cds",
+		"prefix": "#Betatest: Add Column",
+		"body": ["{\n\\$Type  : 'UI.DataField',\nValue  : stepStatus,\nCriticality : criticality\n},"]
+		
+	}		
+}
