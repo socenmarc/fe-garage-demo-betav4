@@ -6,7 +6,7 @@ service IncidentService{
     entity SafetyIncidents         as projection on cloud.SafetyIncidents
     /** marc */
         actions {
-            action setHighPriority()       returns Integer;
+            action setHighPriority()       returns SafetyIncidents;
         }
     /** end marc */
 

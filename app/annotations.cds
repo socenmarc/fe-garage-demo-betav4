@@ -39,13 +39,20 @@ annotate service.SafetyIncidents with @(UI : {
         $Type : 'UI.DataField',
         Value : title
     },
-    /** marc */
+    /** marc - for v4*/
     {
 				$Type: 'UI.DataFieldForAction', 
 				Label:'{i18n>setHighPriority}', 
 				Action:'IncidentService.setHighPriority', 
 				Inline: true
 			},
+    /** marc - for v2*/
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>setHighPriorityv2}', 
+				Action:'IncidentService.SafetyIncidents/setHighPriority', 
+				Inline: true
+			},            
     /** end marc */
 
     ],

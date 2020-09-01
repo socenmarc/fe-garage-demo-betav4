@@ -33,9 +33,48 @@ module.exports = cds.service.impl(async function (srv) {
           })
     };
 
-    function setHighPriority() {
-        console.log('The incident is:', req.params[0].ID)
-        
+    async function setHighPriority (req) {
+
+        console.log('The incident is:', req.params[0].ID);
+        const {ID} = req.params[0];
+
+        const theIncident = await cds.read(SafetyIncidents, ID);
+        const {description} = theIncident;
+
+        console.log(theIncident.priority_code)
+
+        if (theIncident.priority_code === "1"){
+            req.error({
+                code: "code2",
+                message: 'Incident is high already',
+                target: 'some_field'
+            })
+        } else {     
+            
+            //const result = await srv.update('SafetyIncidents', ID).with(`priority_code =`, '1')
+            const tx = cds.transaction(req)
+            const affectedRows = await tx.run (
+              UPDATE (SafetyIncidents) .set ('priority_code =', '1')
+              .where ('ID=', ID)
+            )        
+            if ( affectedRows < 1) {
+                req.error({
+                    code: "code3",
+                    message: 'Error updating priority',
+                    target: 'some_field'
+                })
+            } else {
+                req.info ({
+                    code: "code1",
+                    message: 'Priority updated',
+                    target: 'some_field'                
+                })
+                theIncident.priority_code = '1';
+                console.log('bye')
+                return theIncident; 
+            }        
+        }
+        return theIncident;
     }
 
     /** end Marc */

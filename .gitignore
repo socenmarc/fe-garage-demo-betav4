@@ -74,3 +74,6 @@ app/incidents/src
 
 # Source folder of SAP Fiori Tools generated project
 app\incidents\src
+
+# Source folder of SAP Fiori Tools generated project
+app\incidents_v4_w_annotations\src

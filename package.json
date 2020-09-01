@@ -8,11 +8,12 @@
   },
   "license": "SAP SAMPLE CODE LICENSE",
   "dependencies": {
-    "@sap/cds": "^3",
+    "@sap/cds": "^4",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.4.42",
     "@sap/hana-client": "^2",
-    "@sap/xssec": "^2",
+    "@sap/xssec": "^3",
     "express": "^4",
-    "hdb": "^0.17.2"
+    "hdb": "^0.18.1"
   },
   "engines": {
     "node": "^12"
@@ -47,10 +48,11 @@
     "srv"
   ],
   "devDependencies": {
-    "@sap/ux-specification": "^1.78.6",
-    "sqlite3": "^4.2.0"
+    "@sap/ux-specification": "^1.78.7",
+    "sqlite3": "^5.0.0"
   },
   "sapux": [
-    "app/incidents"
+    "app/incidents",
+    "app/incidents_v4_w_annotations"
   ]
 }
