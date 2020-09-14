@@ -33,8 +33,8 @@ module.exports = cds.service.impl(async function (srv) {
           })
     };
 
-    function setHighPriority() {
-        console.log('The incident is:', req.params[0].ID)
+    function setHighPriority(req) {
+        console.log('setHighPriority pressed. The incident is:', req.params[0].ID)
         
     }
 
