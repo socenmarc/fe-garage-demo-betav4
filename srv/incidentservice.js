@@ -18,12 +18,15 @@ module.exports = cds.service.impl(async function (srv) {
 
     //read/edit event hook after read  of entity 'SafetyIncidents'
     srv.after(["READ", "EDIT"], "SafetyIncidents", setTechnicalFlags);
+    srv.after("READ", "SafetyIncidents", setHighPriorityFlag);
     srv.after("READ", "SafetyIncidents", setPriorityCriticality);
     srv.before("SAVE", "SafetyIncidents", validateSafetyIncident);
     
     /** Marc */
     srv.before("SAVE", "SafetyIncidents", messageSafetyIncident);
     srv.on("setHighPriority", "SafetyIncidents", setHighPriority)
+    srv.on("setHighPriorityWithComment", "SafetyIncidents", setHighPriorityWithComment)
+    srv.on("createViaWizard", createViaWizard)
 
     function messageSafetyIncident(req) {
         req.info ({
@@ -33,13 +36,26 @@ module.exports = cds.service.impl(async function (srv) {
           })
     };
 
-    async function setHighPriority (req) {
+    async function createViaWizard(req) {
+        console.log('Amazing button')
+        req.notify('Amazing button')   
+    }   
+
+    async function setHighPriority(req) {
+        return _setHighPriority(req)        
+    }    
+
+    async function setHighPriorityWithComment(req) {  
+        const {comment} = req.data    
+        return _setHighPriority(req, comment)        
+    }    
+
+    async function _setHighPriority (req,comment) {
 
         console.log('The incident is:', req.params[0].ID);
         const {ID} = req.params[0];
 
         const theIncident = await cds.read(SafetyIncidents, ID);
-        const {description} = theIncident;
 
         console.log(theIncident.priority_code)
 
@@ -54,8 +70,8 @@ module.exports = cds.service.impl(async function (srv) {
             //const result = await srv.update('SafetyIncidents', ID).with(`priority_code =`, '1')
             const tx = cds.transaction(req)
             const affectedRows = await tx.run (
-              UPDATE (SafetyIncidents) .set ('priority_code =', '1')
-              .where ('ID=', ID)
+              UPDATE (SafetyIncidents).set ('priority_code =', '1' ,'setToHighComment =', comment)
+                                      .where ('ID=', ID)
             )        
             if ( affectedRows < 1) {
                 req.error({
@@ -66,8 +82,7 @@ module.exports = cds.service.impl(async function (srv) {
             } else {
                 req.info ({
                     code: "code1",
-                    message: 'Priority updated',
-                    target: 'some_field'                
+                    message: 'Priority updated'            
                 })
                 theIncident.priority_code = '1';
                 console.log('bye')
@@ -75,7 +90,28 @@ module.exports = cds.service.impl(async function (srv) {
             }        
         }
         return theIncident;
-    }
+    };
+
+    //Set High Priority Flag
+    function setHighPriorityFlag(safetyIncidents, req) {
+
+        function _setFlags(safetyIncident) {
+            safetyIncident.isHigh  = (safetyIncident.priority.code === '1'); //|| (safetyIncident.priority.code === '1');
+        }
+
+        //If priority is not requested, do not try to calculete isHigh
+        if (req.query.SELECT.columns.filter(({ func }) => {
+            return func === 'priority_code';
+        }).length){
+            return
+        } 
+
+        if (Array.isArray(safetyIncidents)) {
+            safetyIncidents.forEach(_setFlags);
+        } else {
+            _setFlags(safetyIncidents);
+        }
+    };
 
     /** end Marc */
 
@@ -88,6 +124,7 @@ module.exports = cds.service.impl(async function (srv) {
 
         function _setFlags(safetyIncident) {
             safetyIncident.isDraft = !safetyIncident.IsActiveEntity;
+
             // field control on the 'identifier' property
             if (safetyIncident.IsActiveEntity) {
                 safetyIncident.identifierFieldControl = FieldControl.Optional;

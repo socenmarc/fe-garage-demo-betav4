@@ -8,111 +8,22 @@
     ],
     "configurations": [
         {
-            "name": "Start incident_v2",
+            "name": "cds run",
             "type": "node",
             "request": "launch",
-            "runtimeExecutable": "npm",
-            "cwd": "c:\\Users\\mmauri\\ipWorkspace\\betaFioriElements\\2020-08 Beta program\\fe-garage-demo-betav4\\incident_v2",
-            "windows": {
-                "runtimeExecutable": "npm.cmd"
-            },
-            "runtimeArgs": [
-                "run-script",
-                "start"
-            ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "noDebug": true,
-            "port": 9229,
-            "env": {
-                "DEBUG": "--inspect"
-            }
-        },
-        {
-            "name": "Start incident_v2 with UI5 Version",
-            "type": "node",
-            "request": "launch",
-            "runtimeExecutable": "npm",
-            "cwd": "c:\\Users\\mmauri\\ipWorkspace\\betaFioriElements\\2020-08 Beta program\\fe-garage-demo-betav4\\incident_v2",
-            "windows": {
-                "runtimeExecutable": "npm.cmd"
-            },
-            "runtimeArgs": [
-                "run-script",
-                "start"
-            ],
+            "program": "${workspaceFolder}/.vscode/cds",
             "args": [
-                "--",
-                "${input:UI5Version}"
+              "run"
             ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "noDebug": true,
-            "port": 9229,
-            "env": {
-                "DEBUG": "--inspect"
-            }
-        },
-        {
-            "name": "Start incident_v2 Mock",
-            "type": "node",
-            "request": "launch",
-            "cwd": "c:\\Users\\mmauri\\ipWorkspace\\betaFioriElements\\2020-08 Beta program\\fe-garage-demo-betav4\\incident_v2",
-            "runtimeExecutable": "npm",
-            "windows": {
-                "runtimeExecutable": "npm.cmd"
-            },
-            "runtimeArgs": [
-                "run-script",
-                "start-mock"
+            "skipFiles": [
+              "<node_internals>/**/*.js",
+              "**/cds-reflect/lib/index.js",
+              "**/cds/lib/index.js",
+              "**/.vscode/cds.js"
             ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "noDebug": true,
-            "port": 9229,
-            "env": {}
-        },
-        {
-            "name": "Start incident_v2 Mock with UI5 Version",
-            "type": "node",
-            "request": "launch",
-            "cwd": "c:\\Users\\mmauri\\ipWorkspace\\betaFioriElements\\2020-08 Beta program\\fe-garage-demo-betav4\\incident_v2",
-            "runtimeExecutable": "npm",
-            "windows": {
-                "runtimeExecutable": "npm.cmd"
-            },
-            "runtimeArgs": [
-                "run-script",
-                "start-mock"
-            ],
-            "args": [
-                "--",
-                "${input:UI5Version}"
-            ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "noDebug": true,
-            "port": 9229
-        },
-        {
-            "name": "Start incident_v2 Local",
-            "type": "node",
-            "request": "launch",
-            "cwd": "c:\\Users\\mmauri\\ipWorkspace\\betaFioriElements\\2020-08 Beta program\\fe-garage-demo-betav4\\incident_v2",
-            "runtimeExecutable": "npm",
-            "windows": {
-                "runtimeExecutable": "npm.cmd"
-            },
-            "runtimeArgs": [
-                "run-script",
-                "start-local"
-            ],
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen",
-            "noDebug": true,
-            "port": 9229,
-            "env": {}
-        }
+            "autoAttachChildProcesses": true,
+            "console": "integratedTerminal"
+          },        
     ],
     "compounds": []
 }

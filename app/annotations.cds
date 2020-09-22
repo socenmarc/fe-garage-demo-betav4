@@ -1,5 +1,30 @@
 using IncidentService as service from '../srv/incidentservice';
 
+/** marc - hidding default buttons*/
+annotate service.SafetyIncidents  with @Capabilities : { 
+    InsertRestrictions : {
+        $Type:'Capabilities.InsertRestrictionsType',
+        Insertable : true,
+        
+    },
+    DeleteRestrictions : {
+        $Type:'Capabilities.DeleteRestrictionsType',
+        Deletable : true,
+        
+    },    
+ } ;
+
+ annotate service.SafetyIncidents with @Common : { 
+     SideEffects : {
+         $Type:'Common.SideEffectsType',
+         TriggerAction : 'createViaWizard'
+         
+     },
+     
+  };
+ 
+/** fi marc */
+
 annotate service.SafetyIncidents with @(UI : {
     //basic list report annotations
     //the presentation variant defines a per default ascending sorting for the LR table
@@ -40,12 +65,33 @@ annotate service.SafetyIncidents with @(UI : {
         Value : title
     },
     /** marc - for v4*/
+    /** set priority button*/
     {
 				$Type: 'UI.DataFieldForAction', 
 				Label:'{i18n>setHighPriority}', 
 				Action:'IncidentService.setHighPriority', 
+                ![@UI.Hidden] : isHigh,
 				Inline: true
-			},
+	},
+    /** set priority with comment button*/
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>setHighPriorityWithComment}', 
+				Action:'IncidentService.setHighPriorityWithComment', 
+                ![@UI.Hidden] : isHigh,
+				Inline: true
+	},    
+    /** high priority comment*/
+    {
+        $Type : 'UI.DataField',
+        Value : setToHighComment
+    },
+    /** call wizard */    
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>createViaWizard}', 
+				Action:'createViaWizard'
+    },     
     /** marc - for v2*/
     {
 				$Type: 'UI.DataFieldForAction', 
@@ -115,6 +161,10 @@ annotate service.SafetyIncidents with @(UI : {
         $Type : 'UI.DataField',
         Value : priority_code
     },
+    {
+        $Type : 'UI.DataField',
+        Value : setToHighComment
+    },    
     {
         $Type : 'UI.DataField',
         Value : category_code
