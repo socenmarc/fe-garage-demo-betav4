@@ -28,7 +28,7 @@ entity SafetyIncidents : managed, identified {
                               on incidentProcessTimeline.safetyIncident = $self;
   isDraft                 : TechnicalBooleanFlag not null default false;
   identifierFieldControl  : TechnicalFieldControlFlag not null default 7; // 7 = #Mandatory;
-  isHigh                  : TechnicalBooleanFlag not null default false;
+  isHigh                  : Boolean not null default false @title : 'isHigh';
   setToHighComment        : String(500)                       @title : 'High comment';
 }
 
