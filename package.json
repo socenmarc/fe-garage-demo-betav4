@@ -48,11 +48,10 @@
     "srv"
   ],
   "devDependencies": {
-    "@sap/ux-specification": "^1.78.7",
+    "@sap/ux-specification": "1.78.10",
     "sqlite3": "^5.0.0"
   },
   "sapux": [
-    "app/incidents",
-    "app/incidents_v4_w_annotations"
+    "app/incidents"
   ]
 }

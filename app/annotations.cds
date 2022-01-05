@@ -4,7 +4,7 @@ using IncidentService as service from '../srv/incidentservice';
 annotate service.SafetyIncidents  with @Capabilities : { 
     InsertRestrictions : {
         $Type:'Capabilities.InsertRestrictionsType',
-        Insertable : true,
+        Insertable : true
         
     },
     DeleteRestrictions : {
@@ -14,14 +14,14 @@ annotate service.SafetyIncidents  with @Capabilities : {
     },    
  } ;
 
- annotate service.SafetyIncidents with @Common : { 
+/*  annotate service.SafetyIncidents.setHighPriority with @Common : { 
      SideEffects : {
          $Type:'Common.SideEffectsType',
-         TriggerAction : 'createViaWizard'
-         
-     },
-     
-  };
+         TargetProperties : [
+             priority_code
+         ],                     
+     },     
+  }; */
  
 /** fi marc */
 
@@ -132,6 +132,7 @@ annotate service.SafetyIncidents with @(UI : {
     //https://github.com/SAP/odata-vocabularies/blob/master/vocabularies/UI.md#FieldGroupType
     FieldGroup #HeaderGeneralInformation : {Data : [
     {Value : priority_code},
+    {Value : priority.descr},
     {Value : incidentStatus_code},
     {Value : category_code},
     {
