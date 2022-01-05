@@ -74,17 +74,26 @@
                 {
                     "pattern": ":?query:",
                     "name": "SafetyIncidentsList",
-                    "target": "SafetyIncidentsList"
+                    "target": [
+                        "SafetyIncidentsList"
+                    ]
                 },
                 {
                     "pattern": "SafetyIncidents({key}):?query:",
                     "name": "SafetyIncidentsObjectPage",
-                    "target": "SafetyIncidentsObjectPage"
+                    "target": [
+                        "SafetyIncidentsList",
+                        "SafetyIncidentsObjectPage"
+                    ]
                 },
                 {
                     "pattern": "SafetyIncidents({key})/incidentFlow({key2}):?query:",
                     "name": "ProcessFlowViewPage_incidentFlow",
-                    "target": "ProcessFlowViewPage_incidentFlow"
+                    "target": [
+                        "SafetyIncidentsList",
+                        "SafetyIncidentsObjectPage",
+                        "ProcessFlowViewPage_incidentFlow"
+                    ]
                 }
             ],
             "targets": {
@@ -106,10 +115,18 @@
                             },
                             "initialLoad": true,
                             "controlConfiguration": {
-                                "@com.sap.vocabularies.UI.v1.LineItem": {}
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "creationMode": {
+                                            "name": "Inline"
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
+                    },
+                    "controlAggregation": "beginColumnPages",
+                    "contextPattern": ""
                 },
                 "SafetyIncidentsObjectPage": {
                     "type": "Component",
@@ -142,7 +159,9 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    "controlAggregation": "midColumnPages",
+                    "contextPattern": "/SafetyIncidents({key})"
                 },
                 "ProcessFlowViewPage_incidentFlow": {
                     "viewId": "ProcessFlowView",
@@ -152,13 +171,28 @@
                             "entitySet": "IncidentFlow",
                             "navigation": {}
                         }
-                    }
+                    },
+                    "controlAggregation": "endColumnPages",
+                    "contextPattern": "/SafetyIncidents({key})/incidentFlow({key2})"
                 }
+            },
+            "config": {
+                "flexibleColumnLayout": {
+                    "defaultTwoColumnLayoutType": "TwoColumnsMidExpanded",
+                    "defaultThreeColumnLayoutType": "ThreeColumnsEndExpanded"
+                },
+                "routerClass": "sap.f.routing.Router"
             }
         },
         "contentDensities": {
             "compact": true,
             "cozy": true
+        },
+        "rootView": {
+            "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+            "type": "XML",
+            "async": true,
+            "id": "appRootView"
         }
     },
     "sap.platform.abap": {
