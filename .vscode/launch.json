@@ -1,0 +1,46 @@
+{
+    "inputs": [
+        {
+            "id": "UI5Version",
+            "type": "command",
+            "command": "sap.ux.appGenerator.ui5Version"
+        }
+    ],
+    "configurations": [
+        {
+            "name": "cds run",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/cds",
+            "args": [
+              "run"
+            ],
+            "skipFiles": [
+              "<node_internals>/**/*.js",
+              "**/cds-reflect/lib/index.js",
+              "**/cds/lib/index.js",
+              "**/.vscode/cds.js"
+            ],
+            "autoAttachChildProcesses": true,
+            "console": "integratedTerminal"
+          },        
+        {
+            "name": "cds watch",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/cds",
+            "args": [
+              "watch"
+            ],
+            "skipFiles": [
+              "<node_internals>/**/*.js",
+              "**/cds-reflect/lib/index.js",
+              "**/cds/lib/index.js",
+              "**/.vscode/cds.js"
+            ],
+            "autoAttachChildProcesses": true,
+            "console": "integratedTerminal"
+          },        
+    ],
+    "compounds": []
+}

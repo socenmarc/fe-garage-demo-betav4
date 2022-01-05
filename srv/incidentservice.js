@@ -18,12 +18,15 @@ module.exports = cds.service.impl(async function (srv) {
 
     //read/edit event hook after read  of entity 'SafetyIncidents'
     srv.after(["READ", "EDIT"], "SafetyIncidents", setTechnicalFlags);
+    srv.after("READ", "SafetyIncidents", setHighPriorityFlag);
     srv.after("READ", "SafetyIncidents", setPriorityCriticality);
     srv.before("SAVE", "SafetyIncidents", validateSafetyIncident);
     
     /** Marc */
     srv.before("SAVE", "SafetyIncidents", messageSafetyIncident);
     srv.on("setHighPriority", "SafetyIncidents", setHighPriority)
+    srv.on("setHighPriorityWithComment", "SafetyIncidents", setHighPriorityWithComment)
+    srv.on("createViaWizard", createViaWizard)
 
     function messageSafetyIncident(req) {
         req.info ({
@@ -33,10 +36,125 @@ module.exports = cds.service.impl(async function (srv) {
           })
     };
 
-    function setHighPriority(req) {
-        console.log('setHighPriority pressed. The incident is:', req.params[0].ID)
-        
-    }
+    async function createViaWizard(req) {
+        console.log('Amazing button')
+        req.notify('Amazing button')   
+    }   
+
+    async function changePriority(req) {
+        const {priority} = req.data    
+        return _changePriority(req, priority)        
+    }  
+    
+    async function setHighPriority(req) {
+        return _setHighPriority(req)        
+    }    
+
+    async function setHighPriorityWithComment(req) {  
+        const {comment} = req.data    
+        return _setHighPriority(req, comment)        
+    }    
+
+    async function _setHighPriority (req,comment) {
+
+        console.log('The incident is:', req.params[0].ID);
+        const {ID} = req.params[0];
+
+        const theIncident = await cds.read(SafetyIncidents, ID);
+
+        console.log(theIncident.priority_code)
+
+        if (theIncident.priority_code === "1"){
+            req.error({
+                code: "code2",
+                message: 'Incident is high already',
+                target: 'some_field'
+            })
+        } else {     
+            
+            const tx = cds.transaction(req)
+            const affectedRows = await tx.run (
+              UPDATE (SafetyIncidents).set ('priority_code =', '1' ,'setToHighComment =', comment)
+                                      .where ('ID=', ID)
+            )        
+            if ( affectedRows < 1) {
+                req.error({
+                    code: "code3",
+                    message: 'Error updating priority',
+                    target: 'some_field'
+                })
+            } else {
+                req.notify ({
+                    code: "code1",
+                    message: 'Priority updated'            
+                })
+                theIncident.priority_code = '1';
+                theIncident.isHigh = true;
+                theIncident.setToHighComment = comment;
+                console.log('bye')
+                return theIncident; 
+            }        
+        }
+        return theIncident;
+    };
+
+    async function _changePriority (req,priority) {
+
+        console.log('The incident is:', req.params[0].ID);
+        const {ID} = req.params[0];
+
+        const theIncident = await cds.read(SafetyIncidents, ID);
+
+        console.log(theIncident.priority_code)
+
+        if (theIncident.priority_code === priority){
+            req.error({
+                code: "code2",
+                message: 'Same priority',
+                target: 'some_field'
+            })
+        } else {     
+            
+            const tx = cds.transaction(req)
+            const affectedRows = await tx.run (
+              UPDATE (SafetyIncidents).set ('priority_code =', priority)
+                                      .where ('ID=', ID)
+            )        
+            if ( affectedRows < 1) {
+                req.error({
+                    code: "code3",
+                    message: 'Error updating priority',
+                    target: 'some_field'
+                })
+            } else {
+                req.notify ({
+                    code: "code1",
+                    message: 'Priority updated to ' + priority             
+                })
+                theIncident.priority_code = priority;
+                return theIncident; 
+            }        
+        }
+        return theIncident;
+    };
+
+    //Set High Priority Flag
+    function setHighPriorityFlag(safetyIncidents, req) {
+
+        function _setFlags(safetyIncident) {
+            safetyIncident.isHigh  = (safetyIncident.priority.code === '1'); //|| (safetyIncident.priority.code === '1');
+        }
+
+        //If priority is requested, recalculete isHigh flag
+        if (req.query.SELECT.columns.filter( c => c.ref[0] === 'priority').length) { 
+
+            if (Array.isArray(safetyIncidents)) {
+                safetyIncidents.forEach(_setFlags);
+            } else {
+                _setFlags(safetyIncidents);
+            }
+        }
+    };
 
     /** end Marc */
 
@@ -49,6 +167,7 @@ module.exports = cds.service.impl(async function (srv) {
 
         function _setFlags(safetyIncident) {
             safetyIncident.isDraft = !safetyIncident.IsActiveEntity;
+
             // field control on the 'identifier' property
             if (safetyIncident.IsActiveEntity) {
                 safetyIncident.identifierFieldControl = FieldControl.Optional;

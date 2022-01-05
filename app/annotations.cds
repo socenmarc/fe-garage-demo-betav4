@@ -1,5 +1,30 @@
 using IncidentService as service from '../srv/incidentservice';
 
+/** marc - hidding default buttons*/
+annotate service.SafetyIncidents  with @Capabilities : { 
+    InsertRestrictions : {
+        $Type:'Capabilities.InsertRestrictionsType',
+        Insertable : true
+        
+    },
+    DeleteRestrictions : {
+        $Type:'Capabilities.DeleteRestrictionsType',
+        Deletable : true,
+        
+    },    
+ } ;
+
+/*  annotate service.SafetyIncidents.setHighPriority with @Common : { 
+     SideEffects : {
+         $Type:'Common.SideEffectsType',
+         TargetProperties : [
+             priority_code
+         ],                     
+     },     
+  }; */
+ 
+/** fi marc */
+
 annotate service.SafetyIncidents with @(UI : {
     //basic list report annotations
     //the presentation variant defines a per default ascending sorting for the LR table
@@ -29,23 +54,65 @@ annotate service.SafetyIncidents with @(UI : {
     },
     {
         $Type : 'UI.DataField',
+        Value : priority.descr
+    },      
+    {
+        $Type : 'UI.DataField',
         Value : incidentStatus_code
     },
     {
         $Type : 'UI.DataField',
         Value : category_code
-    },
-    {
+    },   
+/*     {
         $Type : 'UI.DataField',
         Value : title
-    },
-    /** marc */
+    }, */
+    /** marc - for v4*/
+    /** set priority button*/
     {
 				$Type: 'UI.DataFieldForAction', 
 				Label:'{i18n>setHighPriority}', 
 				Action:'IncidentService.setHighPriority', 
+                ![@UI.Hidden] : isHigh,
 				Inline: true
-			},
+	},
+    /** set priority with comment button*/
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>setHighPriorityWithComment}', 
+				Action:'IncidentService.setHighPriorityWithComment', 
+                ![@UI.Hidden] : isHigh,
+				Inline: true
+	},    
+    /** high priority comment*/
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>changePriority}', 
+				Action:'IncidentService.changePriority', 
+				Inline: true
+	},     
+    {
+        $Type : 'UI.DataField',
+        Value : setToHighComment
+    },
+    {
+        $Type : 'UI.DataField',
+        Value : isHigh
+    },
+    /** call wizard */    
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>createViaWizard}', 
+				Action:'createViaWizard'
+    },     
+    /** marc - for v2*/
+    {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>setHighPriorityv2}', 
+				Action:'IncidentService.SafetyIncidents/setHighPriority', 
+				Inline: true
+			},            
     /** end marc */
 
     ],
@@ -79,6 +146,7 @@ annotate service.SafetyIncidents with @(UI : {
     //https://github.com/SAP/odata-vocabularies/blob/master/vocabularies/UI.md#FieldGroupType
     FieldGroup #HeaderGeneralInformation : {Data : [
     {Value : priority_code},
+    {Value : priority.descr},
     {Value : incidentStatus_code},
     {Value : category_code},
     {
@@ -108,6 +176,10 @@ annotate service.SafetyIncidents with @(UI : {
         $Type : 'UI.DataField',
         Value : priority_code
     },
+    {
+        $Type : 'UI.DataField',
+        Value : setToHighComment
+    },    
     {
         $Type : 'UI.DataField',
         Value : category_code
