@@ -54,16 +54,20 @@ annotate service.SafetyIncidents with @(UI : {
     },
     {
         $Type : 'UI.DataField',
+        Value : priority.descr
+    },      
+    {
+        $Type : 'UI.DataField',
         Value : incidentStatus_code
     },
     {
         $Type : 'UI.DataField',
         Value : category_code
-    },
-    {
+    },   
+/*     {
         $Type : 'UI.DataField',
         Value : title
-    },
+    }, */
     /** marc - for v4*/
     /** set priority button*/
     {
@@ -83,8 +87,18 @@ annotate service.SafetyIncidents with @(UI : {
 	},    
     /** high priority comment*/
     {
+				$Type: 'UI.DataFieldForAction', 
+				Label:'{i18n>changePriority}', 
+				Action:'IncidentService.changePriority', 
+				Inline: true
+	},     
+    {
         $Type : 'UI.DataField',
         Value : setToHighComment
+    },
+    {
+        $Type : 'UI.DataField',
+        Value : isHigh
     },
     /** call wizard */    
     {

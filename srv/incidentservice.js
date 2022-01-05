@@ -72,7 +72,6 @@ module.exports = cds.service.impl(async function (srv) {
             })
         } else {     
             
-            //const result = await srv.update('SafetyIncidents', ID).with(`priority_code =`, '1')
             const tx = cds.transaction(req)
             const affectedRows = await tx.run (
               UPDATE (SafetyIncidents).set ('priority_code =', '1' ,'setToHighComment =', comment)
@@ -90,6 +89,8 @@ module.exports = cds.service.impl(async function (srv) {
                     message: 'Priority updated'            
                 })
                 theIncident.priority_code = '1';
+                theIncident.isHigh = true;
+                theIncident.setToHighComment = comment;
                 console.log('bye')
                 return theIncident; 
             }        
