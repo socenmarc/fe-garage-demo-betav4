@@ -25,7 +25,11 @@ service IncidentService{
                 TargetProperties : ['_it/priority_code','_it/setToHighComment','_it/isHigh']
             }               
             action setHighPriorityWithComment(
-                @(UI.ParameterDefaultValue: 'default comment' )
+                @readonly
+                @title : 'today'
+                @(UI.ParameterDefaultValue: _it.createdAt )
+                today : Timestamp,
+                @(UI.ParameterDefaultValue: _it.priority.descr )
                 comment : String(500))       returns SafetyIncidents;
             @cds.odata.bindingparameter.name : '_it'
             @Common.SideEffects : {
